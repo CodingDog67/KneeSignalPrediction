@@ -44,3 +44,7 @@ plt.xlabel("Time in seconds")
 plt.ylabel('Amplitude')
 plt.show()
 breaking = 0
+
+
+# preprocess (read in all data, save in structure, split in extension flexion cycle)
+
