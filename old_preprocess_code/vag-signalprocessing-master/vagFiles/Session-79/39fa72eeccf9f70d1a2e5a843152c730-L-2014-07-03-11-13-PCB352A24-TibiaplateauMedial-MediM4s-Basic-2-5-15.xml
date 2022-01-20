@@ -1,0 +1,21 @@
+<vagdata version="1.0">
+   <signal>Session-79\39fa72eeccf9f70d1a2e5a843152c730-L-2014-07-03-11-13-PCB352A24-TibiaplateauMedial-MediM4s-Basic-2-5-15.wav</signal>
+   <meta>
+      <timestamp>2014-07-03-11-13</timestamp>
+      <session>79</session>
+      <md5hash>39fa72eeccf9f70d1a2e5a843152c730</md5hash>
+      <knee>L</knee>
+      <protocol>Basic-2-5-15</protocol>
+      <sensor>
+         <name>PCB352A24</name>
+         <position>TibiaplateauMedial</position>
+      </sensor>
+      <orthosis>
+         <name>MediM4s</name>
+      </orthosis>
+      <tag>
+         <natural_angle_value>0.49993</natural_angle_value>
+         <zero_angle_value>0.79705</zero_angle_value>
+      </tag>
+   </meta>
+<segmentation><segmentscount>17</segmentscount><segment index="1"><begin>239702</begin><end>288158</end><type>Measurement/Calibration</type></segment><segment index="2"><begin>308400</begin><end>356008</end><type>Measurement/Calibration</type></segment><segment index="3"><begin>381222</begin><end>424534</end><type>Measurement/Calibration</type></segment><segment index="4"><begin>452003</begin><end>500830</end><type>Measurement/Calibration</type></segment><segment index="5"><begin>530222</begin><end>577328</end><type>Measurement/Calibration</type></segment><segment index="6"><begin>613423</begin><end>667232</end><type>Measurement/Calibration</type></segment><segment index="7"><begin>705492</begin><end>757493</end><type>Measurement/Calibration</type></segment><segment index="8"><begin>825959</begin><end>881923</end><type>Measurement/Calibration</type></segment><segment index="9"><begin>943226</begin><end>989523</end><type>Measurement/Calibration</type></segment><segment index="10"><begin>1042306</begin><end>1089439</end><type>Measurement/Calibration</type></segment><segment index="11"><begin>1130808</begin><end>1183058</end><type>Measurement/Calibration</type></segment><segment index="12"><begin>1228537</begin><end>1277912</end><type>Measurement/Calibration</type></segment><segment index="13"><begin>1314707</begin><end>1365566</end><type>Measurement/Calibration</type></segment><segment index="14"><begin>1408184</begin><end>1460976</end><type>Measurement/Calibration</type></segment><segment index="15"><begin>1499719</begin><end>1558587</end><type>Measurement/Calibration</type></segment><segment index="16"><begin>1598174</begin><end>1657522</end><type>Measurement/Calibration</type></segment><segment index="17"><begin>1690582</begin><end>1742606</end><type>Measurement/Calibration</type></segment></segmentation></vagdata>

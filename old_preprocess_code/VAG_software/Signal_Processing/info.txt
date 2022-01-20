@@ -1,0 +1,5 @@
+Contains software of the VAG project, as collected, structured and worked on by
+Walther Schulze, walther.schulze@gmail.com
+
+In particular:
+- the relevant tools by Nam
