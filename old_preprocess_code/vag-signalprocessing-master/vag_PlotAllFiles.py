@@ -7,7 +7,7 @@ Last modified: 21 August 2014
 """
 
 from scipy.io import wavfile
-from PySide.QtGui import QFileDialog, QApplication
+from PySide2.QtGui import QFileDialog, QApplication
 import matplotlib.pyplot as plt
 import numpy
 import os

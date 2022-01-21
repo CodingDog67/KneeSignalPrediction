@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 
+
 from pathlib import Path
 
 
@@ -38,7 +39,7 @@ samplerate, knee_data = wavfile.read(filePath + session_list[0] + '/' + patient_
 # test plotting
 length = knee_data.shape[0] / samplerate
 time = np.linspace(0., length, knee_data.shape[0])
-plt.plot(time, knee_data[:,1], label="left channel")
+plt.plot(time, knee_data[:, 1], label="left channel")
 plt.legend()
 plt.xlabel("Time in seconds")
 plt.ylabel('Amplitude')

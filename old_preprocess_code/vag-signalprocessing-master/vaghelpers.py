@@ -11,10 +11,11 @@ Last modified: 26/08/2014
 """
 
 import numpy
-from scipy.signal import blackman, periodogram
+from scipy.signal import periodogram
+from scipy.signal.windows import blackman
 from scipy.fftpack import rfft
-from scipy import log10
-from elementtree.ElementTree import parse
+from numpy import log10
+from xml.etree.ElementTree import parse
 
 def vag2float(sig, dtype=numpy.float32):
     """

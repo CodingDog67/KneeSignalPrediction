@@ -5,13 +5,13 @@
 
 filePath = ''
 labelPath = ''
+
 def return_data_locs(location):
 
     # data locations f2lab
-    match location:
-        case 1:
-            filePath = '/media/ari/Harddisk/knee data/knee signal/Patienten/'
-            labelPath = '/media/ari/Harddisk/knee data/knee signal/'
+    if location == 1:
+        filePath = '/media/ari/Harddisk/knee data/knee signal/Patienten/'
+        labelPath = '/media/ari/Harddisk/knee data/knee signal/'
 
     # data locations home
 

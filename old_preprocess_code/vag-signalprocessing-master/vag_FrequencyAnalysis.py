@@ -12,7 +12,7 @@ from scipy.signal import blackman, periodogram, correlate
 import matplotlib.pyplot as plt
 import numpy
 import os
-from PySide.QtGui import QFileDialog, QApplication
+from PySide2.QtGui import QFileDialog, QApplication
 
 # Some another helpers
 import vaghelpers
