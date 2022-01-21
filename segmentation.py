@@ -4,6 +4,7 @@ import numpy
 
 import peak_finder
 
+#fs is the sampling frequency and angles is the normalized angles 
 def segmentation_jhu(fs, angles):
     """
     Segmentation algorithm using angular signals from FEN/JHU

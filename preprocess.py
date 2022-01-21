@@ -33,16 +33,19 @@ for session in range(len(session_list)):
 
     knee_data = vag2float(knee_data, np.float32)
 
+    signal = knee_data[:, 0]
+    angles = knee_data[:, 1]
+
     # test plotting
     length = knee_data.shape[0] / samplerate
     time = np.linspace(0., length, knee_data.shape[0])
 
     fig, axs = plt.subplots(2)
-    axs[0].plot(time, knee_data[:, 1], label="right channel")
+    axs[0].plot(time, angles, label="right channel")
     axs[0].legend()
     plt.xlabel("Time in seconds")
     plt.ylabel('Amplitude')
-    axs[1].plot(time, knee_data[:, 0], label="left channel")
+    axs[1].plot(time, signal, label="left channel")
     axs[1].legend()
     plt.xlabel("Time in seconds")
     plt.ylabel('Amplitude')
