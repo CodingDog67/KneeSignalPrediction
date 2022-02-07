@@ -19,15 +19,15 @@ Last modified: 02/07/2014
 
 import os
 import numpy
-import tkMessageBox
+from tkinter import messagebox
 from scipy.io import wavfile
-from Tkinter import Tk, W, N, E, S, Toplevel
-from ttk import Button, Frame, Label
+from tkinter import Tk, W, N, E, S, Toplevel
+from tkinter.ttk import Button, Frame, Label
 from matplotlib import pylab
 from matplotlib.widgets import Cursor
 import matplotlib.backends.backend_tkagg as tkagg
-from tkFileDialog import askopenfilename, askdirectory
-from elementtree.ElementTree import Element, SubElement, ElementTree, parse
+from tkinter.filedialog import askopenfilename, askdirectory
+from xml.etree.ElementTree import Element, SubElement, ElementTree, parse
 
 import vaghelpers
 import segmentation
@@ -163,16 +163,16 @@ def ImportFromXML():
             canvas.show()
             print(u"ImportFromXML ... Finish!")
         else:
-            tkMessageBox.showerror(title="Error", message="Segment(s) not found")
+            messagebox.showerror(title="Error", message="Segment(s) not found")
     else:
-        tkMessageBox.showerror(title="Error", message="XML file not found")
+        messagebox.showerror(title="Error", message="XML file not found")
 
 
 def ExportToXML():
     global SEGINDEX
     XSEGMENTS = numpy.sort(SEGINDEX)
     if len(XSEGMENTS)%2:
-        tkMessageBox.showerror(title="Error", message="Uncompleted segment! Please try again.")
+        messagebox.showerror(title="Error", message="Uncompleted segment! Please try again.")
     else:
         XSEGMENTS = numpy.reshape(XSEGMENTS, (-1,2))
         input_xmlfile = os.path.join(os.path.normcase(dirname), realname)+".xml"
@@ -185,7 +185,7 @@ def ExportToXML():
             xml_Root = xml_Tree.getroot()
         else:
             print(u"XML file does not exist")
-            create_xml = tkMessageBox.askokcancel(title="XML file does not exist", message="Create XML file?")
+            create_xml = messagebox.askokcancel(title="XML file does not exist", message="Create XML file?")
             if create_xml:
                 # Build a new XML element tree
                 xml_Root = Element('vagdata')

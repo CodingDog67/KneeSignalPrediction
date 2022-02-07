@@ -1,5 +1,5 @@
 <vagdata version="1.0">
-   <signal>Session-56\b6d647671e828b596d1e341890b793c0-R-2014-05-24-11-54-PCB352A24-TibiaplateauMedial-Albrecht-Basic-2-5-15.wav</signal>
+   <signal>Session-56\b6d647671e828b596d1e341890b793c0-R-2014-05-24-11-54-PCB352A24-Patella-Albrecht-Basic-2-5-15.wav</signal>
    <meta>
       <timestamp>2014-05-24-11-54</timestamp>
       <session>56</session>
@@ -8,7 +8,7 @@
       <protocol>Basic-2-5-15</protocol>
       <sensor>
          <name>PCB352A24</name>
-         <position>TibiaplateauMedial</position>
+         <position>Patella</position>
       </sensor>
       <orthosis>
          <name>Albrecht</name>
@@ -18,4 +18,4 @@
          <zero_angle_value>3.1879</zero_angle_value>
       </tag>
    </meta>
-<segmentation><segmentscount>15</segmentscount><segment index="1"><begin>288029</begin><end>378914</end><type>Measurement/Calibration</type></segment><segment index="2"><begin>415246</begin><end>526480</end><type>Measurement/Calibration</type></segment><segment index="3"><begin>551084</begin><end>656694</end><type>Measurement/Calibration</type></segment><segment index="4"><begin>662815</begin><end>775616</end><type>Measurement/Calibration</type></segment><segment index="5"><begin>797417</begin><end>927226</end><type>Measurement/Calibration</type></segment><segment index="6"><begin>933115</begin><end>1047181</end><type>Measurement/Calibration</type></segment><segment index="7"><begin>1062050</begin><end>1181625</end><type>Measurement/Calibration</type></segment><segment index="8"><begin>1199674</begin><end>1329298</end><type>Measurement/Calibration</type></segment><segment index="9"><begin>1342828</begin><end>1469281</end><type>Measurement/Calibration</type></segment><segment index="10"><begin>1477262</begin><end>1601138</end><type>Measurement/Calibration</type></segment><segment index="11"><begin>1609250</begin><end>1740897</end><type>Measurement/Calibration</type></segment><segment index="12"><begin>1741545</begin><end>1861511</end><type>Measurement/Calibration</type></segment><segment index="13"><begin>1876508</begin><end>2008316</end><type>Measurement/Calibration</type></segment><segment index="14"><begin>2023789</begin><end>2177446</end><type>Measurement/Calibration</type></segment><segment index="15"><begin>2182865</begin><end>2310315</end><type>Measurement/Calibration</type></segment></segmentation></vagdata>
+<segmentation version="ONN"><segmentscount>0</segmentscount></segmentation></vagdata>
