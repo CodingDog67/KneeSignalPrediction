@@ -12,11 +12,14 @@ def return_data_locs(location):
     if location == 1:
         filePath = '/media/ari/Harddisk/knee data/knee signal/Patienten/'
         labelPath = '/media/ari/Harddisk/knee data/knee signal/'
-
+        savePath = ''
     # data locations home
-
+    if location == 2:
+        filePath = 'D:\\knee signal project\\daten\\Patienten\\'
+        labelPath = 'D:\\knee signal project\\'
+        savePath = 'D:\\knee signal project\\daten\\results\\individual movements\\'
     # data locations laptop
 
     # data locations server
 
-    return filePath, labelPath
+    return filePath, labelPath, savePath

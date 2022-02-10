@@ -8,7 +8,7 @@ import os.path
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
-
+from batch_segmentation import *
 
 from pathlib import Path
 
@@ -35,17 +35,21 @@ patella_data = [s for s in patient_files if 'Patella' in s]
 tibiaMedial_data = [s for s in patient_files if 'Medial' in s]
 tibiaLateral_data = [s for s in patient_files if 'Lateral' in s]
 
-samplerate, knee_data = wavfile.read(filePath + session_list[0] + '/' + patient_files[0])
+samplerate, bone_music  = wavfile.read(filePath + session_list[0] + '/' + patient_files[0])
 # test plotting
-length = knee_data.shape[0] / samplerate
-time = np.linspace(0., length, knee_data.shape[0])
-plt.plot(time, knee_data[:, 1], label="left channel")
+bone_sound = bone_music .shape[0]
+angles = bone_music [:, 1]
+
+length = bone_sound / samplerate
+time = np.linspace(0., length, bone_music .shape[0])
+plt.plot(time, angles, label="left channel")
 plt.legend()
 plt.xlabel("Time in seconds")
 plt.ylabel('Amplitude')
 plt.show()
 breaking = 0
 
+sections = segmentation_jhu(samplerate, )
 
 # preprocess (read in all data, save in structure, split in extension flexion cycle)
 
