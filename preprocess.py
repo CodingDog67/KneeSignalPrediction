@@ -21,22 +21,22 @@ def newline(p1, p2):
         ymax = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmax-p1[0])
         ymin = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmin-p1[0])
 
-    l = mlines.Line2D([xmin, xmax], [ymin, ymax])
-    ax.add_line(l)
-    return l
+    line = mlines.Line2D([xmin, xmax], [ymin, ymax])
+    ax.add_line(line)
+    return line
 
 
-def preprocessing(filePath, labelPath, savePath):
+def preprocessing(file_path, label_path, save_path):
 
     # read in all labels
-    #todo save labels per file for easier access
-    Knee_label_list = pd.read_excel(labelPath + 'Übersicht Probanden_Patienten_Upload.xlsx')
+    # todo save labels per file for easier access
+    knee_label_list = pd.read_excel(label_path + 'Übersicht Probanden_Patienten_Upload.xlsx')
 
     # read in all data location
-    session_list = os.listdir(filePath)
+    session_list = os.listdir(file_path)
 
     for session in range(len(session_list)):
-        patient_files = os.listdir(filePath + session_list[session])
+        patient_files = os.listdir(file_path + session_list[session])
         approved = ["wav"]
 
         # filter out all the wav files and sort by sensor (2 runs/2 files)
@@ -46,8 +46,11 @@ def preprocessing(filePath, labelPath, savePath):
         tibiaLateral_data = [s for s in patient_files if 'Lateral' in s]
 
         for soundfile in range(len(patient_files)):
-            samplerate, bone_music = wavfile.read(filePath + session_list[session] + '\\' + patient_files[soundfile])
+            samplerate, bone_music = wavfile.read(file_path + session_list[session] + '\\' + patient_files[soundfile])
             realname = patient_files[soundfile].replace(".wav", "")
+
+            if os.path.isfile(save_path + realname + '.png'):
+                continue
 
             bone_music = vag2float(bone_music, np.float32)
 
@@ -82,16 +85,16 @@ def preprocessing(filePath, labelPath, savePath):
             axs[1].plot(time, signal)
             plt.xlabel("Time in seconds")
             plt.ylabel('Amplitude')
-            plt.savefig(savePath + realname + '.png')
+            plt.savefig(save_path + realname + '.png')
             plt.close()
-            #plt.show()
+            # plt.show()
 
             # maybe save as single sequences for faster read in
             x_segments = np.reshape(np.sort(sections), (-1, 2))
 
             # create path if it does not exist yet
             if session == 0:
-                Path(savePath).mkdir(parents=True, exist_ok=True)
+                Path(save_path).mkdir(parents=True, exist_ok=True)
 
             for i in range(0, len(x_segments)):
                 # extract the single movement and identify which sensor it came from
@@ -114,11 +117,11 @@ def preprocessing(filePath, labelPath, savePath):
                 plt.xlabel("amplitude")
                 plt.ylabel("time in seconds")
                 plt.plot(time, single_movement)
-                plt.savefig(savePath + realname + "_segment_" + str(i + 1) + '.png')
+                plt.savefig(save_path + realname + "_segment_" + str(i + 1) + '.png')
                 plt.close()
-                #plt.show()
+                # plt.show()
 
-                wavfile.write(savePath + realname + "_segment_" + str(i + 1) + ".wav", samplerate, single_movement)
+                wavfile.write(save_path + realname + "_segment_" + str(i + 1) + ".wav", samplerate, single_movement)
 
         print(u"Session" +str(session) + "ExportToFiles ... Finish!")
 
