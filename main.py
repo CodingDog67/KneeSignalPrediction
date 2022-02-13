@@ -11,7 +11,7 @@ from pathlib import Path
 
 def main():
     # 1 for großhadern, 2 for home, 3 for laptop, 4 for server
-    filePath, labelPath, savePath = return_data_locs(2)
+    filePath, labelPath, savePath = return_data_locs(1)
 
     # preprocess data and labels, splitting into segments and saving, or simple loading from split location
     preprocessing(filePath, labelPath, savePath)

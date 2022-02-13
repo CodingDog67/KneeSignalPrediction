@@ -62,6 +62,8 @@ def segmentation_jhu(fs, angles):
     segments = list()
     for pk in peaks:
         pos = combined.index(pk)
+        if pos == (len(combined)-1):
+            continue
         segments.extend((combined[pos - 1], combined[pos + 1]))  #take corners of rel-min
 
     # # Calibration Phase values for rescaling angular values

@@ -46,7 +46,7 @@ def preprocessing(file_path, label_path, save_path):
         tibiaLateral_data = [s for s in patient_files if 'Lateral' in s]
 
         for soundfile in range(len(patient_files)):
-            samplerate, bone_music = wavfile.read(file_path + session_list[session] + '\\' + patient_files[soundfile])
+            samplerate, bone_music = wavfile.read(file_path + session_list[session] + '/' + patient_files[soundfile])
             realname = patient_files[soundfile].replace(".wav", "")
 
             if os.path.isfile(save_path + realname + '.png'):
@@ -59,7 +59,7 @@ def preprocessing(file_path, label_path, save_path):
 
             #  todo  pre-process audio data, send patrick data
             #   and paper, read some stuff on instrument or speech distinction, learn
-            #  todo how to do transfer learning and try with pre-trained networks, try the matlab code to distringuish
+            #  todo how to do transfer learning and try with pre-trained networks, try the matlab code to distinguish
             #   between healthy and sick patients, look and weights and biases
             #   run the entire code from nima and walther on their data again, try on ours
 
@@ -67,6 +67,10 @@ def preprocessing(file_path, label_path, save_path):
             # todo add segmentation into flexion and extension? but words would be even shorter
             # bone_music  = preprocess(bone_music )  # return divided section from a single recording session
             sections = segmentation_jhu(samplerate, angles)
+
+            # create path if it does not exist yet
+            if session == 0:
+                Path(save_path).mkdir(parents=True, exist_ok=True)
 
             # test plotting
             length = bone_music.shape[0] / samplerate
@@ -92,9 +96,7 @@ def preprocessing(file_path, label_path, save_path):
             # maybe save as single sequences for faster read in
             x_segments = np.reshape(np.sort(sections), (-1, 2))
 
-            # create path if it does not exist yet
-            if session == 0:
-                Path(save_path).mkdir(parents=True, exist_ok=True)
+
 
             for i in range(0, len(x_segments)):
                 # extract the single movement and identify which sensor it came from
