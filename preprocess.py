@@ -28,12 +28,11 @@ def newline(p1, p2):
 
 def preprocessing(file_path, label_path, save_path):
 
-    # read in all labels
-    # todo save labels per file for easier access
-    knee_label_list = pd.read_excel(label_path + 'Übersicht Probanden_Patienten_Upload.xlsx')
-
     # read in all data location
     session_list = os.listdir(file_path)
+
+    Path(save_path).mkdir(parents=True, exist_ok=True)
+    Path(save_path + 'full file images\\').mkdir(parents=True, exist_ok=True) # path for overall images
 
     for session in range(len(session_list)):
         patient_files = os.listdir(file_path + session_list[session])
@@ -41,15 +40,12 @@ def preprocessing(file_path, label_path, save_path):
 
         # filter out all the wav files and sort by sensor (2 runs/2 files)
         patient_files[:] = [w for w in patient_files if any(sub in w for sub in approved)]
-        patella_data = [s for s in patient_files if 'Patella' in s]
-        tibiaMedial_data = [s for s in patient_files if 'Medial' in s]
-        tibiaLateral_data = [s for s in patient_files if 'Lateral' in s]
 
         for soundfile in range(len(patient_files)):
-            samplerate, bone_music = wavfile.read(file_path + session_list[session] + '/' + patient_files[soundfile])
+            samplerate, bone_music = wavfile.read(file_path + session_list[session] + '\\' + patient_files[soundfile])
             realname = patient_files[soundfile].replace(".wav", "")
 
-            if os.path.isfile(save_path + realname + '.png'):
+            if os.path.isfile(save_path  + realname + '.png'):
                 continue
 
             bone_music = vag2float(bone_music, np.float32)
@@ -57,14 +53,12 @@ def preprocessing(file_path, label_path, save_path):
             signal = bone_music[:, 0]
             angles = bone_music[:, 1]
 
-            #  todo  pre-process audio data, send patrick data
-            #   and paper, read some stuff on instrument or speech distinction, learn
+            #  todo
+            #   read some stuff on instrument or speech distinction, learn
             #  todo how to do transfer learning and try with pre-trained networks, try the matlab code to distinguish
             #   between healthy and sick patients, look and weights and biases
             #   run the entire code from nima and walther on their data again, try on ours
 
-            # preprocess (read in all data, save in structure, split in extension flexion cycle)
-            # todo add segmentation into flexion and extension? but words would be even shorter
             # bone_music  = preprocess(bone_music )  # return divided section from a single recording session
             sections = segmentation_jhu(samplerate, angles)
 
@@ -89,14 +83,12 @@ def preprocessing(file_path, label_path, save_path):
             axs[1].plot(time, signal)
             plt.xlabel("Time in seconds")
             plt.ylabel('Amplitude')
-            plt.savefig(save_path + realname + '.png')
+            plt.savefig(save_path + 'full file images\\' + realname + '.png')
             plt.close()
             # plt.show()
 
             # maybe save as single sequences for faster read in
             x_segments = np.reshape(np.sort(sections), (-1, 2))
-
-
 
             for i in range(0, len(x_segments)):
                 # extract the single movement and identify which sensor it came from
@@ -119,16 +111,25 @@ def preprocessing(file_path, label_path, save_path):
                 plt.xlabel("amplitude")
                 plt.ylabel("time in seconds")
                 plt.plot(time, single_movement)
-                plt.savefig(save_path + realname + "_segment_" + str(i + 1) + '.png')
+                plt.savefig(save_path + "individual movements\\" + realname + "_segment_" + str(i + 1) + '.png')
                 plt.close()
                 # plt.show()
 
-                wavfile.write(save_path + realname + "_segment_" + str(i + 1) + ".wav", samplerate, single_movement)
+                wavfile.write(save_path + "individual movements\\" + realname + "_segment_" + str(i + 1) + ".wav", samplerate, single_movement)
 
         print(u"Session" +str(session) + "ExportToFiles ... Finish!")
 
 
+def read_save_labels(label_path):
+    # read in all labels
+
+    knee_label_list = pd.read_excel(label_path + 'labels.xlsx')
+    retropatellar = knee_label_list['Retropatellar'].to_numpy()
+    lateral = knee_label_list['lateral'].to_numpy()
+    medial = knee_label_list['medial'].to_numpy()
+    innenmeniskus = knee_label_list['Innenmeniskus'].to_numpy()
+    aussenmeniskus = knee_label_list['Außenmeniskus'].to_numpy()
+    session =  knee_label_list['Nummer'].to_list()
 
 
-
-
+    return retropatellar, lateral, medial, innenmeniskus, aussenmeniskus, session
