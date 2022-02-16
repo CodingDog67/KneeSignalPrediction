@@ -29,7 +29,8 @@ def newline(p1, p2):
 def preprocessing(file_path, label_path, save_path):
 
     # read in all data location
-    session_list = os.listdir(file_path)
+    session_list = sorted(os.listdir(file_path))
+
 
     Path(save_path).mkdir(parents=True, exist_ok=True)
     Path(save_path + 'full file images\\').mkdir(parents=True, exist_ok=True) # path for overall images
