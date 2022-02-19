@@ -1,5 +1,4 @@
 import numpy
-from matplotlib import mlab
 from scipy import signal
 import numpy as np
 from copy import deepcopy
@@ -9,6 +8,7 @@ from scipy.signal import find_peaks
 def finding(condition):
     res, = np.nonzero(np.ravel(condition))
     return res  # return tuple might cause a problem
+
 
 def segmentation_jhu(fs, angles):
     """
@@ -33,12 +33,13 @@ def segmentation_jhu(fs, angles):
 
     ang_vel = numpy.gradient(ang_rescale)  # gradient to detect pause in movement
 
-    #peaks = list(peak_finder.maxdet(ang_rescale, 20))
-    peaks, _ = find_peaks(ang_rescale, prominence=20)  #new
+    # peaks = list(peak_finder.maxdet(ang_rescale, 20))
+    peaks, _ = find_peaks(ang_rescale, prominence=20)  # new
 
     # Filtering where values are greater than 53 degrees
     peaks = list(filter(lambda x: ang_rescale[x] > 53, peaks))
-    relmin = finding(numpy.round(ang_vel, decimals=4) == 0.000)  # search for all 0 gradient, angles minima (resting pose)  0.0000 normally
+    # search for all 0 gradient, angles minima (resting pose)  0.0000 normally
+    relmin = finding(numpy.round(ang_vel, decimals=4) == 0.000)
 
     # Filtering where values are less than 53 degrees
     relmin = list(filter(lambda x: ang_rescale[x] < 53, relmin))
@@ -49,7 +50,7 @@ def segmentation_jhu(fs, angles):
 
     # Between peaks, defining thresholds based on standard deviations
     for pk in range(len(section) - 1):
-        pos = list(filter(lambda x: x > section[pk] and x < section[pk + 1], relmin))
+        pos = list(filter(lambda x: section[pk] < x < section[pk + 1], relmin))
         mean = numpy.mean(ang_rescale[pos])
         std = numpy.std(ang_rescale[pos])
         tokeep = list(filter(lambda x: ang_rescale[x] <= mean + std/2, pos))
@@ -64,7 +65,7 @@ def segmentation_jhu(fs, angles):
         pos = combined.index(pk)
         if pos == (len(combined)-1):
             continue
-        segments.extend((combined[pos - 1], combined[pos + 1]))  #take corners of rel-min
+        segments.extend((combined[pos - 1], combined[pos + 1]))  # take corners of rel-min
 
     # # Calibration Phase values for rescaling angular values
     # win = 50000  #experiment with this value?? dont hardcode it?

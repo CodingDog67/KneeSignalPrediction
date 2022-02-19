@@ -3,8 +3,10 @@ from workstationfile import *
 import os.path
 import shutil
 from pathlib import Path
+import numpy as np
 
-def sortdata(labelPath, savePath):
+
+def sortdata(savePath):
 
     full_file_path = savePath+"individual movements\\"
 
@@ -32,3 +34,18 @@ def sortdata(labelPath, savePath):
 
     for i in tibiaLateral_data:
         shutil.copy2(full_file_path + i, target_lateral)
+
+
+def extend_labels(label_list, file_list, session):
+    position = 1
+    session.sort()
+    file_list.sort()
+    for sesh in session:
+        print(sesh)
+        segment_number = len([s for s in file_list if sesh in s])
+        extending = segment_number -1 # label for 1 already exists
+        active_label = label_list[position]
+        label_list = np.insert(label_list, position, np.full(extending, active_label))
+        position += extending + 1
+
+    return label_list

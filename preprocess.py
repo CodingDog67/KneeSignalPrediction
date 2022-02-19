@@ -26,14 +26,14 @@ def newline(p1, p2):
     return line
 
 
-def preprocessing(file_path, label_path, save_path):
+def preprocessing(file_path, save_path):
 
     # read in all data location
     session_list = sorted(os.listdir(file_path))
 
 
     Path(save_path).mkdir(parents=True, exist_ok=True)
-    Path(save_path + 'full file images\\').mkdir(parents=True, exist_ok=True) # path for overall images
+    Path(f"{save_path} 'full file images\\").mkdir(parents=True, exist_ok=True)  # path for overall images
 
     for session in range(len(session_list)):
         patient_files = os.listdir(file_path + session_list[session])
@@ -46,12 +46,12 @@ def preprocessing(file_path, label_path, save_path):
             samplerate, bone_music = wavfile.read(file_path + session_list[session] + '\\' + patient_files[soundfile])
             realname = patient_files[soundfile].replace(".wav", "")
 
-            if os.path.isfile(save_path  + realname + '.png'):
+            if os.path.isfile(save_path + realname + '.png'):
                 continue
 
             bone_music = vag2float(bone_music, np.float32)
 
-            signal = bone_music[:, 0]
+            signals = bone_music[:, 0]
             angles = bone_music[:, 1]
 
             #  todo
@@ -81,10 +81,10 @@ def preprocessing(file_path, label_path, save_path):
             # plot start of segment
             plt.xlabel("Time in seconds")
             plt.ylabel('Amplitude')
-            axs[1].plot(time, signal)
+            axs[1].plot(time, signals)
             plt.xlabel("Time in seconds")
             plt.ylabel('Amplitude')
-            plt.savefig(save_path + 'full file images\\' + realname + '.png')
+            plt.savefig(f"{save_path}full file images\\{realname}.png")
             plt.close()
             # plt.show()
 
@@ -95,7 +95,6 @@ def preprocessing(file_path, label_path, save_path):
                 # extract the single movement and identify which sensor it came from
                 single_movement = bone_music[:, 0]
                 single_movement = single_movement[x_segments[i][0]:x_segments[i][1]]
-                sensortype = ''
 
                 if 'Medial' in realname:
                     sensortype = 'Medial'
@@ -112,13 +111,14 @@ def preprocessing(file_path, label_path, save_path):
                 plt.xlabel("amplitude")
                 plt.ylabel("time in seconds")
                 plt.plot(time, single_movement)
-                plt.savefig(save_path + "individual movements\\" + realname + "_segment_" + str(i + 1) + '.png')
+                plt.savefig(f"{save_path}individual movements\\{realname}_segment_{str(i + 1)}.png")
                 plt.close()
                 # plt.show()
+                wavfile.write(f"{save_path}individual movements\\{realname}_segment_{str(i + 1)}.wav",
+                              samplerate, single_movement)
 
-                wavfile.write(save_path + "individual movements\\" + realname + "_segment_" + str(i + 1) + ".wav", samplerate, single_movement)
 
-        print(u"Session" +str(session) + "ExportToFiles ... Finish!")
+        print(u"Session" + str(session) + "ExportToFiles ... Finish!")
 
 
 def read_save_labels(label_path):
@@ -130,7 +130,6 @@ def read_save_labels(label_path):
     medial = knee_label_list['medial'].to_numpy()
     innenmeniskus = knee_label_list['Innenmeniskus'].to_numpy()
     aussenmeniskus = knee_label_list['Außenmeniskus'].to_numpy()
-    session =  knee_label_list['Nummer'].to_list()
-
+    session = knee_label_list['Nummer'].to_list()
 
     return retropatellar, lateral, medial, innenmeniskus, aussenmeniskus, session
