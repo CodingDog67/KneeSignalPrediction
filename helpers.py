@@ -8,7 +8,7 @@ import numpy as np
 
 def sortdata(savePath):
 
-    full_file_path = savePath+"individual movements\\"
+    full_file_path = savePath+"individual movements/"
 
     file_list = os.listdir(full_file_path)
 
@@ -18,9 +18,9 @@ def sortdata(savePath):
     tibiaMedial_data = [s for s in file_list if 'Medial' in s]
     tibiaLateral_data = [s for s in file_list if 'Lateral' in s]
 
-    target_patella = savePath + "patella_individual_movements\\"
-    target_medial = savePath + "medial_individual_movements\\"
-    target_lateral = savePath + "lateral_individual_movements\\"
+    target_patella = savePath + "patella_individual_movements/"
+    target_medial = savePath + "medial_individual_movements/"
+    target_lateral = savePath + "lateral_individual_movements/"
 
     Path(target_patella).mkdir(parents=True, exist_ok=True)
     Path(target_medial).mkdir(parents=True, exist_ok=True)
@@ -49,3 +49,10 @@ def extend_labels(label_list, file_list, session):
         position += extending + 1
 
     return label_list
+
+
+def exponential_smoothing(data, alpha = 0.99):
+    data_smooth = np.zeros(data.shape())
+
+    for k in range(2,data.shape(0)):
+        data_smooth[k] = alpha * data_smooth[k-1] + (1-alpha)*data[k]

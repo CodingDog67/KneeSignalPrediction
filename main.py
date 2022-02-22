@@ -14,7 +14,7 @@ filter_data = True
 sorting = False
 
 # 1 for großhadern, 2 for home, 3 for laptop, 4 for server
-paths = return_data_locs(2)
+paths = return_data_locs(1)
 
 
 def prepare_data():
@@ -35,11 +35,15 @@ def main():
     retropatellar, lateral, medial, innenmeniskus, aussenmeniskus, session = \
         read_save_labels(paths['labelPath'])
 
+    prepare_data()
+
     file_list_patella = os.listdir(paths["patella_data"])
     approved = ["wav"]
     # filter out all the wav files and sort by sensor (2 runs/2 files)
-    file_list_patella[:] = [w for w in file_list_patella if any(sub in w for sub in approved)]
+    file_list_patella[:] = [w for w in file_list_patella if any(sub in w for sub in approved)].sort()
     extend_labels(retropatellar, file_list_patella, session)
+
+
 
     label_patella = retropatellar
     # filter data to get rid of outliers
