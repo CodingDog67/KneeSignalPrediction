@@ -26,6 +26,7 @@ def newline(p1, p2):
     return line
 
 
+# segmentation into one cycle of movements
 def preprocessing(file_path, save_path):
 
     # read in all data location
@@ -133,8 +134,10 @@ def read_save_labels(label_path):
 
     return retropatellar, lateral, medial, innenmeniskus, aussenmeniskus, session
 
+
 def listdir_fullpath(d):
     return [os.path.join(d, f) for f in os.listdir(d)]
+
 
 def read_final_data(path):
     file_data = []
@@ -153,7 +156,7 @@ def read_final_data(path):
 
     return file_data, samplerate_data
 
-def plot_simple_data(data, smooth_data,  samplerate):
+def plot_simple_data(data, smooth_data,  samplerate, name, alpha, save_path = ''):
 
     # test plotting
     length = data.shape[0] / samplerate
@@ -168,5 +171,7 @@ def plot_simple_data(data, smooth_data,  samplerate):
     axs[1].plot(time, smooth_data)
     plt.xlabel("Time in seconds")
     plt.ylabel('Amplitude')
+    if save_path:
+        plt.savefig(f"{save_path}individual movements\\{name}_smooth_{str(alpha)}.png")
     plt.show()
     #plt.savefig(f"{save_path}individual movements\\{realname}_segment_{str(i + 1)}.png")
