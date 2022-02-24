@@ -74,7 +74,7 @@ def main():
         spec = librosa.feature.melspectrogram( y=smooth_data, sr=samplerate_data[0], S=None, n_fft=2048, hop_length=50, win_length=None,
                                        window='hann', center=True, pad_mode='constant', power=2.0)
 
-        
+
 if __name__ == '__main__':
     main()
 
