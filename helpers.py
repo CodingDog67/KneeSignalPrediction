@@ -1,5 +1,4 @@
 # misc functions to help filter, sort, process data
-from workstationfile import *
 import os.path
 import shutil
 from pathlib import Path
@@ -12,15 +11,13 @@ def sortdata(savePath):
 
     file_list = os.listdir(full_file_path)
 
-    approved = ["wav"]
-    #file_list[:] = [w for w in file_list if any(sub in w for sub in approved)]
     patella_data = [s for s in file_list if 'Patella' in s]
     tibiaMedial_data = [s for s in file_list if 'Medial' in s]
     tibiaLateral_data = [s for s in file_list if 'Lateral' in s]
 
-    target_patella = savePath + "patella_individual_movements/"
-    target_medial = savePath + "medial_individual_movements/"
-    target_lateral = savePath + "lateral_individual_movements/"
+    target_patella = savePath + "patella_individual_movements\\"
+    target_medial = savePath + "medial_individual_movements\\"
+    target_lateral = savePath + "lateral_individual_movements\\"
 
     Path(target_patella).mkdir(parents=True, exist_ok=True)
     Path(target_medial).mkdir(parents=True, exist_ok=True)
@@ -37,22 +34,48 @@ def sortdata(savePath):
 
 
 def extend_labels(label_list, file_list, session):
-    position = 1
+
     session.sort()
     file_list.sort()
-    for sesh in session:
-        print(sesh)
-        segment_number = len([s for s in file_list if sesh in s])
-        extending = segment_number -1 # label for 1 already exists
-        active_label = label_list[position]
-        label_list = np.insert(label_list, position, np.full(extending, active_label))
-        position += extending + 1
+    new_label_list = []
+    check_segment = []
+    check_sesh = []
+    for counter, sesh in enumerate(session):
 
-    return label_list
+        active_label = label_list[counter]
+        print(counter, sesh)
+        if any(sesh in file_list for file_list in file_list):
+            segment_number = len([s for s in file_list if sesh in s])
+            new_label_list = np.append(new_label_list, np.full(segment_number, active_label))
+
+    return new_label_list.astype(int)
 
 
-def exponential_smoothing(data, alpha = 0.99):
-    data_smooth = np.zeros(data.shape())
+def exponential_smoothing(data, alpha=0.99):
+    data_smooth = np.zeros(len(data))
 
-    for k in range(2,data.shape(0)):
+    for k in range(2, len(data)):
         data_smooth[k] = alpha * data_smooth[k-1] + (1-alpha)*data[k]
+
+    return data_smooth
+
+
+def read_data_names_in(paths):
+    file_list_patella = os.listdir(paths["patella_data"])
+    file_list_medial = os.listdir(paths["medial_data"])
+    file_list_lateral = os.listdir(paths["lateral_data"])
+
+    approved = ["wav"]
+    # filter out all the wav files and sort by sensor (2 runs/2 files)
+    file_list_patella[:] = [w for w in file_list_patella if any(sub in w for sub in approved)]
+    file_list_patella.sort()
+
+    file_list_medial[:] = [w for w in file_list_medial if any(sub in w for sub in approved)]
+    file_list_medial.sort()
+
+    file_list_lateral[:] = [w for w in file_list_lateral if any(sub in w for sub in approved)]
+    file_list_lateral.sort()
+
+    return file_list_patella, file_list_medial, file_list_lateral
+
+

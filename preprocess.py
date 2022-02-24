@@ -33,8 +33,8 @@ def preprocessing(file_path, save_path):
 
     # create path if it does not exist yet
     Path(save_path).mkdir(parents=True, exist_ok=True)
-    Path(f"{save_path}full file images/").mkdir(parents=True, exist_ok=True)  # path for overall images
-    Path(f"{save_path}individual movements/").mkdir(parents=True, exist_ok=True)
+    Path(f"{save_path}full file images\\").mkdir(parents=True, exist_ok=True)  # path for overall images
+    Path(f"{save_path}individual movements\\").mkdir(parents=True, exist_ok=True)
 
     for session in range(len(session_list)):
         patient_files = os.listdir(file_path + session_list[session])
@@ -44,10 +44,10 @@ def preprocessing(file_path, save_path):
         patient_files[:] = [w for w in patient_files if any(sub in w for sub in approved)]
 
         for soundfile in range(len(patient_files)):
-            samplerate, bone_music = wavfile.read(f"{file_path}{session_list[session]}/{patient_files[soundfile]}")
+            samplerate, bone_music = wavfile.read(f"{file_path}{session_list[session]}\\{patient_files[soundfile]}")
             realname = patient_files[soundfile].replace(".wav", "")
 
-            if os.path.isfile(f"{save_path}full file images/{realname}.png"):
+            if os.path.isfile(f"{save_path}full file images\\{realname}.png"):
                 continue
 
             bone_music = vag2float(bone_music, np.float32)
@@ -83,7 +83,7 @@ def preprocessing(file_path, save_path):
             axs[1].plot(time, signals)
             plt.xlabel("Time in seconds")
             plt.ylabel('Amplitude')
-            plt.savefig(f"{save_path}full file images/{realname}.png")
+            plt.savefig(f"{save_path}full file images\\{realname}.png")
             plt.close()
             # plt.show()
 
@@ -110,10 +110,10 @@ def preprocessing(file_path, save_path):
                 plt.xlabel("amplitude")
                 plt.ylabel("time in seconds")
                 plt.plot(time, single_movement)
-                plt.savefig(f"{save_path}individual movements/{realname}_segment_{str(i + 1)}.png")
+                plt.savefig(f"{save_path}individual movements\\{realname}_segment_{str(i + 1)}.png")
                 plt.close()
                 # plt.show()
-                wavfile.write(f"{save_path}individual movements/{realname}_segment_{str(i + 1)}.wav",
+                wavfile.write(f"{save_path}individual movements\\{realname}_segment_{str(i + 1)}.wav",
                               samplerate, single_movement)
 
 
@@ -132,3 +132,41 @@ def read_save_labels(label_path):
     session = knee_label_list['Nummer'].to_list()
 
     return retropatellar, lateral, medial, innenmeniskus, aussenmeniskus, session
+
+def listdir_fullpath(d):
+    return [os.path.join(d, f) for f in os.listdir(d)]
+
+def read_final_data(path):
+    file_data = []
+    samplerate_data = []
+    approved = ["wav"]
+    all_paths = sorted(listdir_fullpath(path))
+
+    # filter out all the wav files and sort by sensor (2 runs/2 files)
+    all_paths[:] = [w for w in all_paths if any(sub in w for sub in approved)]
+
+
+    for file_path in all_paths:
+        samplerate, bone_music = wavfile.read(f"{file_path}")
+        file_data.append(bone_music)
+        samplerate_data.append(samplerate)
+
+    return file_data, samplerate_data
+
+def plot_simple_data(data, smooth_data,  samplerate):
+
+    # test plotting
+    length = data.shape[0] / samplerate
+    time = np.linspace(0., length, data.shape[0])
+
+    fig, axs = plt.subplots(2)
+    axs[0].plot(time, data)
+
+    # plot start of segment
+    plt.xlabel("Time in seconds")
+    plt.ylabel('Amplitude')
+    axs[1].plot(time, smooth_data)
+    plt.xlabel("Time in seconds")
+    plt.ylabel('Amplitude')
+    plt.show()
+    #plt.savefig(f"{save_path}individual movements\\{realname}_segment_{str(i + 1)}.png")
