@@ -51,13 +51,7 @@ def extend_labels(label_list, file_list, session):
     return new_label_list.astype(int)
 
 
-def exponential_smoothing(data, alpha=0.99):
-    data_smooth = np.zeros(len(data))
 
-    for k in range(2, len(data)):
-        data_smooth[k] = alpha * data_smooth[k-1] + (1-alpha)*data[k]
-
-    return data_smooth
 
 
 def read_data_names_in(paths):

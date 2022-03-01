@@ -25,6 +25,13 @@ def newline(p1, p2):
     ax.add_line(line)
     return line
 
+def exponential_smoothing(data, alpha=0.99):
+    data_smooth = np.zeros(len(data))
+
+    for k in range(2, len(data)):
+        data_smooth[k] = alpha * data_smooth[k-1] + (1-alpha)*data[k]
+
+    return data_smooth
 
 # segmentation into one cycle of movements
 def preprocessing(file_path, save_path):
@@ -158,6 +165,9 @@ def read_final_data(path):
 
 def plot_simple_data(data, smooth_data,  samplerate, name, alpha, save_path = ''):
 
+    if save_path:
+        Path(save_path).mkdir(parents=True, exist_ok=True)
+
     # test plotting
     length = data.shape[0] / samplerate
     time = np.linspace(0., length, data.shape[0])
@@ -172,6 +182,19 @@ def plot_simple_data(data, smooth_data,  samplerate, name, alpha, save_path = ''
     plt.xlabel("Time in seconds")
     plt.ylabel('Amplitude')
     if save_path:
-        plt.savefig(f"{save_path}individual movements\\{name}_smooth_{str(alpha)}.png")
+        plt.savefig(f"{save_path}\\{name}_smooth_{str(alpha)}.png")
     plt.show()
     #plt.savefig(f"{save_path}individual movements\\{realname}_segment_{str(i + 1)}.png")
+
+
+def smooth_data(data, alpha, samplerate, names, savepath=''):
+
+    data_smooth = []
+    for counter, single_file in enumerate(data):
+
+        single_smooth_file = exponential_smoothing(single_file, alpha=alpha)
+        data_smooth.append(single_smooth_file)
+        plot_simple_data(single_file, single_smooth_file, samplerate[counter],
+                         names[counter], alpha, savepath)
+
+    return data_smooth

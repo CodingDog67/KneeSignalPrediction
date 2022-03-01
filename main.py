@@ -5,7 +5,7 @@
 
 # todo read The new descriptor in processing of vibroacoustic signal of knee joint
 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7506694/#B14-sensors-20-05015
-
+import preprocess
 from workstationfile import return_data_locs
 from preprocess import *
 from helpers import *
@@ -16,7 +16,9 @@ filter_data = True
 sorting = False
 
 # 1 for großhadern, 2 for home, 3 for laptop, 4 for server
-paths = return_data_locs(1)
+paths = return_data_locs(2)
+
+
 
 
 def prepare_data():
@@ -31,7 +33,7 @@ def prepare_data():
         sortdata(paths['savePath'])
 
 
-def main():
+def main(alpha=0.95):
 
     # read in labels and data
     retropatellar, lateral, medial, innenmeniskus, aussenmeniskus, session = \
@@ -49,21 +51,14 @@ def main():
 
     # filter data to get rid of outliers
     if filter_data:
-        data = 0  # filter this
+
         file_data_patella, samplerate_data = read_final_data(paths['patella_data'])
 
-        for counter, single_file in enumerate(file_data_patella):
-            alpha = 0.95
-            single_smooth_file = exponential_smoothing(file_data_patella[0], alpha=alpha)
-            plot_simple_data(single_file, single_smooth_file, samplerate_data[counter],
-                             name_list_patella[counter], alpha, paths['patella_data_smooth'])
-
-        #test filter
-        smooth_data = exponential_smoothing(file_data_patella[0], alpha=0.95)
-        plot_simple_data(file_data_patella[0], smooth_data,  samplerate_data[0], save=True)
+        file_data_patella_smooth = preprocess.smooth_data(file_data_patella, alpha, samplerate_data, name_list_patella,
+                               savepath=paths['patella_data_smooth'])
 
         #spectogram
-        f, t, Sxx = signal.spectrogram(x=smooth_data, fs= samplerate_data[0], nperseg=5)
+        f, t, Sxx = signal.spectrogram(x=file_data_patella_smooth[0], fs= samplerate_data[0], nperseg=5)
         plt.pcolormesh(t, f, Sxx, shading='gouraud')
         plt.ylabel('Frequency [Hz]')
         plt.xlabel('Time [sec]')
@@ -71,7 +66,7 @@ def main():
 
         #stft
         amp = 0.25
-        f, t, Zxx = signal.stft(smooth_data, samplerate_data[0], nperseg=5)
+        f, t, Zxx = signal.stft(file_data_patella_smooth[0], samplerate_data[0], nperseg=5)
         plt.pcolormesh(t, f, np.abs(Zxx), vmin=0, vmax=amp, shading='gouraud')
         plt.title('STFT Magnitude')
         plt.ylabel('Frequency [Hz]')
@@ -79,7 +74,7 @@ def main():
         plt.show()
 
         #mel_spec
-        spec = librosa.feature.melspectrogram( y=smooth_data, sr=samplerate_data[0], S=None, n_fft=2048, hop_length=50, win_length=None,
+        spec = librosa.feature.melspectrogram( y=file_data_patella_smooth[0], sr=samplerate_data[0], S=None, n_fft=2048, hop_length=50, win_length=None,
                                        window='hann', center=True, pad_mode='constant', power=2.0)
 
 
