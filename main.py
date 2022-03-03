@@ -10,15 +10,14 @@ from workstationfile import return_data_locs
 from preprocess import *
 from helpers import *
 import librosa
+import librosa.display
 
 preprocess_data = False
-filter_data = True
+filter_data = False
 sorting = False
 
 # 1 for großhadern, 2 for home, 3 for laptop, 4 for server
-paths = return_data_locs(2)
-
-
+paths = return_data_locs(1)
 
 
 def prepare_data():
@@ -50,32 +49,45 @@ def main(alpha=0.95):
 
 
     # filter data to get rid of outliers
-    if filter_data:
+    file_data_patella, samplerate_data = read_final_data(paths['patella_data'])
 
-        file_data_patella, samplerate_data = read_final_data(paths['patella_data'])
+    if filter_data:
 
         file_data_patella_smooth = preprocess.smooth_data(file_data_patella, alpha, samplerate_data, name_list_patella,
                                savepath=paths['patella_data_smooth'])
 
-        #spectogram
-        f, t, Sxx = signal.spectrogram(x=file_data_patella_smooth[0], fs= samplerate_data[0], nperseg=5)
-        plt.pcolormesh(t, f, Sxx, shading='gouraud')
-        plt.ylabel('Frequency [Hz]')
-        plt.xlabel('Time [sec]')
-        plt.show()
+    # plot normal data
+    plt.figure()
+    librosa.display.waveshow(file_data_patella[0], sr=samplerate_data[0], marker='.', label="full_signal")
+    plt.title(name_list_patella[0])
+    plt.show()
 
-        #stft
-        amp = 0.25
-        f, t, Zxx = signal.stft(file_data_patella_smooth[0], samplerate_data[0], nperseg=5)
-        plt.pcolormesh(t, f, np.abs(Zxx), vmin=0, vmax=amp, shading='gouraud')
-        plt.title('STFT Magnitude')
-        plt.ylabel('Frequency [Hz]')
-        plt.xlabel('Time [sec]')
-        plt.show()
+    # spectogram librosa
+    D = librosa.stft(file_data_patella[0],  n_fft=512)
+    S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
+    plt.figure()
+    librosa.display.specshow(S_db)
+    plt.colorbar()
 
-        #mel_spec
-        spec = librosa.feature.melspectrogram( y=file_data_patella_smooth[0], sr=samplerate_data[0], S=None, n_fft=2048, hop_length=50, win_length=None,
-                                       window='hann', center=True, pad_mode='constant', power=2.0)
+    #spectogram
+    f, t, Sxx = signal.spectrogram(x=file_data_patella_smooth[0], fs= samplerate_data[0], nperseg=5)
+    plt.pcolormesh(t, f, Sxx, shading='gouraud')
+    plt.ylabel('Frequency [Hz]')
+    plt.xlabel('Time [sec]')
+    plt.show()
+
+    #stft
+    amp = 0.25
+    f, t, Zxx = signal.stft(file_data_patella_smooth[0], samplerate_data[0], nperseg=5)
+    plt.pcolormesh(t, f, np.abs(Zxx), vmin=0, vmax=amp, shading='gouraud')
+    plt.title('STFT Magnitude')
+    plt.ylabel('Frequency [Hz]')
+    plt.xlabel('Time [sec]')
+    plt.show()
+
+    #mel_spec
+    spec = librosa.feature.melspectrogram( y=file_data_patella_smooth[0], sr=samplerate_data[0], S=None, n_fft=2048, hop_length=50, win_length=None,
+                                   window='hann', center=True, pad_mode='constant', power=2.0)
 
 
 if __name__ == '__main__':
