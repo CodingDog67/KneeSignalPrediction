@@ -69,12 +69,9 @@ def main(alpha=0.95):
     librosa.display.specshow(S_db)
     plt.colorbar()
 
-    #spectogram
-    f, t, Sxx = signal.spectrogram(x=file_data_patella_smooth[0], fs= samplerate_data[0], nperseg=5)
-    plt.pcolormesh(t, f, Sxx, shading='gouraud')
-    plt.ylabel('Frequency [Hz]')
-    plt.xlabel('Time [sec]')
-    plt.show()
+        #mel_spec
+        spec = librosa.feature.melspectrogram(y=file_data_patella_smooth[0], sr=samplerate_data[0], S=None, n_fft=2048, hop_length=50, win_length=None,
+                                       window='hann', center=True, pad_mode='constant', power=2.0)
 
     #stft
     amp = 0.25
