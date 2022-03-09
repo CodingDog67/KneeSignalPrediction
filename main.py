@@ -69,8 +69,8 @@ def main(alpha=0.95):
     librosa.display.specshow(S_db)
     plt.colorbar()
 
-        #mel_spec
-        spec = librosa.feature.melspectrogram(y=file_data_patella_smooth[0], sr=samplerate_data[0], S=None, n_fft=2048, hop_length=50, win_length=None,
+    #mel_spec
+    spec = librosa.feature.melspectrogram(y=file_data_patella_smooth[0], sr=samplerate_data[0], S=None, n_fft=2048, hop_length=50, win_length=None,
                                        window='hann', center=True, pad_mode='constant', power=2.0)
 
     #stft
@@ -83,8 +83,9 @@ def main(alpha=0.95):
     plt.show()
 
     #mel_spec
-    spec = librosa.feature.melspectrogram( y=file_data_patella_smooth[0], sr=samplerate_data[0], S=None, n_fft=2048, hop_length=50, win_length=None,
-                                   window='hann', center=True, pad_mode='constant', power=2.0)
+    spec = librosa.feature.melspectrogram(y=file_data_patella_smooth[0], sr=samplerate_data[0], S=None, n_fft=2048,
+                                           hop_length=50, win_length=None, window='hann', center=True, pad_mode='constant', power=2.0)
+
 
 
 if __name__ == '__main__':
