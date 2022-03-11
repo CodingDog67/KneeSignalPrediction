@@ -172,19 +172,20 @@ def plot_simple_data(data, smooth_data,  samplerate, name, alpha, save_path = ''
     length = data.shape[0] / samplerate
     time = np.linspace(0., length, data.shape[0])
 
-    fig, axs = plt.subplots(2)
-    axs[0].plot(time, data)
 
     # plot start of segment
-    plt.xlabel("Time in seconds")
-    plt.ylabel('Amplitude')
-    axs[1].plot(time, smooth_data)
-    plt.xlabel("Time in seconds")
-    plt.ylabel('Amplitude')
-    if save_path:
-        plt.savefig(f"{save_path}\\{name}_smooth_{str(alpha)}.png")
-    plt.show()
-    #plt.savefig(f"{save_path}individual movements\\{realname}_segment_{str(i + 1)}.png")
+    if not os.path.isfile(f"{save_path}\\{name}_smooth_{str(alpha)}.png"):
+        fig, axs = plt.subplots(2)
+        axs[0].plot(time, data)
+        plt.xlabel("Time in seconds")
+        plt.ylabel('Amplitude')
+        axs[1].plot(time, smooth_data)
+        plt.xlabel("Time in seconds")
+        plt.ylabel('Amplitude')
+        if save_path:
+            plt.savefig(f"{save_path}\\{name}_smooth_{str(alpha)}.png")
+        plt.show()
+        plt.close('all')
 
 
 def smooth_data(data, alpha, samplerate, names, savepath=''):
@@ -196,5 +197,9 @@ def smooth_data(data, alpha, samplerate, names, savepath=''):
         data_smooth.append(single_smooth_file)
         plot_simple_data(single_file, single_smooth_file, samplerate[counter],
                          names[counter], alpha, savepath)
+
+    if savepath:
+        with open(savepath+"smoothed.npy", 'wb') as f:
+            np.save(f, data_smooth, allow_pickle=True, fix_imports=True)
 
     return data_smooth

@@ -5,6 +5,8 @@
 
 # todo read The new descriptor in processing of vibroacoustic signal of knee joint
 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7506694/#B14-sensors-20-05015
+import numpy as np
+
 import preprocess
 from workstationfile import return_data_locs
 from preprocess import *
@@ -13,7 +15,7 @@ import librosa
 import librosa.display
 
 preprocess_data = False
-filter_data = False
+filter_data = True
 sorting = False
 
 # 1 for großhadern, 2 for home, 3 for laptop, 4 for server
@@ -52,26 +54,38 @@ def main(alpha=0.95):
     file_data_patella, samplerate_data = read_final_data(paths['patella_data'])
 
     if filter_data:
-
-        file_data_patella_smooth = preprocess.smooth_data(file_data_patella, alpha, samplerate_data, name_list_patella,
-                               savepath=paths['patella_data_smooth'])
+        if os.path.isfile(paths['patella_data_smooth']+"smoothed.npy"):
+            file_data_patella_smooth = np.load(paths['patella_data_smooth']+"smoothed.npy", allow_pickle=True)
+        else:
+            file_data_patella_smooth = preprocess.smooth_data(file_data_patella, alpha, samplerate_data, name_list_patella,
+                                   savepath=paths['patella_data_smooth'])
 
     # plot normal data
     plt.figure()
-    librosa.display.waveshow(file_data_patella[0], sr=samplerate_data[0], marker='.', label="full_signal")
+    librosa.display.waveshow(file_data_patella_smooth[0], sr=samplerate_data[0], marker='.', label="full_signal")
     plt.title(name_list_patella[0])
     plt.show()
 
     # spectogram librosa
-    D = librosa.stft(file_data_patella[0],  n_fft=512)
+    #But if you try to compute a 512-point FFT over a sequence of length 1000, MATLAB will take only the first 512 points and truncate the rest. If you try to compare between a 1024 point FFT and a 2056-point FFT over a [1:1000], you will get a similar plot.
+    #So the moral: choose your N to be greater than or equal to the length of the sequence.
+    fig, ax = plt.subplots()
+    D = librosa.stft(file_data_patella[0])
     S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
-    plt.figure()
-    librosa.display.specshow(S_db)
-    plt.colorbar()
+    img = librosa.display.specshow(S_db, x_axis='time', y_axis='log', ax=ax)
+    ax.set(title="Higher time and frequency resolution")
+    plt.colorbar(img, ax=ax, format="%+2.f dB")
+    plt.show()
 
     #mel_spec
-    spec = librosa.feature.melspectrogram(y=file_data_patella_smooth[0], sr=samplerate_data[0], S=None, n_fft=2048, hop_length=50, win_length=None,
+    spec = librosa.feature.melspectrogram(y=file_data_patella_smooth[0], sr=samplerate_data[0], S=None,
                                        window='hann', center=True, pad_mode='constant', power=2.0)
+    fig, ax = plt.subplots()
+    img = librosa.display.specshow(spec, y_axis='mel', x_axis='time', ax=ax)
+    ax.set(title="spectrogram display")
+    plt.colorbar(img, ax=ax, format="%2.f dB")
+    plt.show()
+    plt.close()
 
     #stft
     amp = 0.25
