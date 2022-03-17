@@ -25,6 +25,7 @@ def newline(p1, p2):
     ax.add_line(line)
     return line
 
+
 def exponential_smoothing(data, alpha=0.99):
     data_smooth = np.zeros(len(data))
 
@@ -32,6 +33,7 @@ def exponential_smoothing(data, alpha=0.99):
         data_smooth[k] = alpha * data_smooth[k-1] + (1-alpha)*data[k]
 
     return data_smooth
+
 
 # segmentation into one cycle of movements
 def preprocessing(file_path, save_path):
@@ -124,7 +126,6 @@ def preprocessing(file_path, save_path):
                 wavfile.write(f"{save_path}individual movements\\{realname}_segment_{str(i + 1)}.wav",
                               samplerate, single_movement)
 
-
         print(u"Session" + str(session) + "ExportToFiles ... Finish!")
 
 
@@ -155,7 +156,6 @@ def read_final_data(path):
     # filter out all the wav files and sort by sensor (2 runs/2 files)
     all_paths[:] = [w for w in all_paths if any(sub in w for sub in approved)]
 
-
     for file_path in all_paths:
         samplerate, bone_music = wavfile.read(f"{file_path}")
         file_data.append(bone_music)
@@ -163,15 +163,15 @@ def read_final_data(path):
 
     return file_data, samplerate_data
 
+
 def plot_simple_data(data, smooth_data,  samplerate, name, alpha, save_path = ''):
 
-    if save_path:
+    if not save_path:
         Path(save_path).mkdir(parents=True, exist_ok=True)
 
     # test plotting
     length = data.shape[0] / samplerate
     time = np.linspace(0., length, data.shape[0])
-
 
     # plot start of segment
     if not os.path.isfile(f"{save_path}\\{name}_smooth_{str(alpha)}.png"):

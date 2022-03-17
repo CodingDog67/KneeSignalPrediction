@@ -13,13 +13,16 @@ from preprocess import *
 from helpers import *
 import librosa
 import librosa.display
+import torch
 
 preprocess_data = False
 filter_data = True
 sorting = False
 
 # 1 for großhadern, 2 for home, 3 for laptop, 4 for server
-paths = return_data_locs(1)
+paths = return_data_locs(2)
+
+# look at thsi : https://github.com/LearnedVector/A-Hackers-AI-Voice-Assistant/blob/master/VoiceAssistant/speechrecognition/neuralnet/train.py
 
 
 def prepare_data():
@@ -60,6 +63,15 @@ def main(alpha=0.95):
             file_data_patella_smooth = preprocess.smooth_data(file_data_patella, alpha, samplerate_data, name_list_patella,
                                    savepath=paths['patella_data_smooth'])
 
+    #todo
+    # split data
+    # load all data
+    # write network pure cnn, rnn, lstm and mix 
+    # write training framework
+
+    torch.utils.data.random_split
+
+
     # plot normal data
     plt.figure()
     librosa.display.waveshow(file_data_patella_smooth[0], sr=samplerate_data[0], marker='.', label="full_signal")
@@ -70,20 +82,25 @@ def main(alpha=0.95):
     #But if you try to compute a 512-point FFT over a sequence of length 1000, MATLAB will take only the first 512 points and truncate the rest. If you try to compare between a 1024 point FFT and a 2056-point FFT over a [1:1000], you will get a similar plot.
     #So the moral: choose your N to be greater than or equal to the length of the sequence.
     fig, ax = plt.subplots()
-    D = librosa.stft(file_data_patella[0])
+    D = librosa.stft(file_data_patella_smooth[0])
     S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
     img = librosa.display.specshow(S_db, x_axis='time', y_axis='log', ax=ax)
     ax.set(title="Higher time and frequency resolution")
     plt.colorbar(img, ax=ax, format="%+2.f dB")
     plt.show()
 
-    #mel_spec
-    spec = librosa.feature.melspectrogram(y=file_data_patella_smooth[0], sr=samplerate_data[0], S=None,
-                                       window='hann', center=True, pad_mode='constant', power=2.0)
+    # chroma form
+    chroma = librosa.feature.chroma_stft(y=file_data_patella_smooth[0], sr=samplerate_data[0])
+    img = librosa.display.specshow(chroma, y_axis='chroma', x_axis='time', ax=ax)
+    fig.colorbar(img, ax=ax)
+    plt.show()
+
+    #mel_spec makes no sense, this is not human speech
+    spec = librosa.feature.melspectrogram(y=file_data_patella_smooth[0], sr=samplerate_data[0])
     fig, ax = plt.subplots()
     img = librosa.display.specshow(spec, y_axis='mel', x_axis='time', ax=ax)
     ax.set(title="spectrogram display")
-    plt.colorbar(img, ax=ax, format="%2.f dB")
+    fig.colorbar(img, ax=ax)
     plt.show()
     plt.close()
 
