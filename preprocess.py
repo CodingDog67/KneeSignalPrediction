@@ -6,6 +6,7 @@ from scipy.io import wavfile
 from vaghelpers import vag2float
 from batch_segmentation import *
 from pathlib import Path
+import librosa
 import numpy as np
 import matplotlib.lines as mlines
 
@@ -54,7 +55,8 @@ def preprocessing(file_path, save_path):
         patient_files[:] = [w for w in patient_files if any(sub in w for sub in approved)]
 
         for soundfile in range(len(patient_files)):
-            samplerate, bone_music = wavfile.read(f"{file_path}{session_list[session]}\\{patient_files[soundfile]}")
+            samplerate, bone_music = wavfile.read(f"{file_path}{session_list[session]}/{patient_files[soundfile]}")
+            data_test, samplerate_test = librosa.load(f"{file_path}{session_list[session]}/{patient_files[soundfile]}", sr=16000, mono=False)
             realname = patient_files[soundfile].replace(".wav", "")
 
             if os.path.isfile(f"{save_path}full file images\\{realname}.png"):
