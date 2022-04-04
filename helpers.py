@@ -15,13 +15,13 @@ def sortdata(savePath):
     tibiaMedial_data = [s for s in file_list if 'Medial' in s]
     tibiaLateral_data = [s for s in file_list if 'Lateral' in s]
 
-    target_patella = savePath + "patella_individual_movements\\"
-    target_medial = savePath + "medial_individual_movements\\"
-    target_lateral = savePath + "lateral_individual_movements\\"
+    target_patella = savePath + "patella_individual_movements/"
+    target_medial = savePath + "medial_individual_movements/"
+    target_lateral = savePath + "lateral_individual_movements/"
 
-    Path(target_patella).mkdir(parents=True, exist_ok=True)
-    Path(target_medial).mkdir(parents=True, exist_ok=True)
-    Path(target_lateral).mkdir(parents=True, exist_ok=True)
+    Path(target_patella).mkdir(parents=True, exist_ok=False)
+    Path(target_medial).mkdir(parents=True, exist_ok=False)
+    Path(target_lateral).mkdir(parents=True, exist_ok=False)
 
     for i in patella_data:
         shutil.copy2(full_file_path + i, target_patella)
