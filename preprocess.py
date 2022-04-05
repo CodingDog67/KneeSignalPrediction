@@ -9,6 +9,7 @@ from pathlib import Path
 import librosa
 import numpy as np
 import matplotlib.lines as mlines
+import os.path as path
 
 
 def newline(p1, p2):
@@ -43,9 +44,9 @@ def preprocessing(file_path, save_path):
     session_list = sorted(os.listdir(file_path))
 
     # create path if it does not exist yet
-    Path(save_path).mkdir(parents=True, exist_ok=True)
-    Path(f"{save_path}full file images\\").mkdir(parents=True, exist_ok=True)  # path for overall images
-    Path(f"{save_path}individual movements\\").mkdir(parents=True, exist_ok=True)
+    Path(save_path).mkdir(parents=True, exist_ok=False)
+    Path(f"{save_path}full file images\\").mkdir(parents=True, exist_ok=False)  # path for overall images
+    Path(f"{save_path}individual movements\\").mkdir(parents=True, exist_ok=False)
 
     for session in range(len(session_list)):
         patient_files = os.listdir(file_path + session_list[session])
@@ -166,17 +167,18 @@ def read_final_data(path):
     return file_data, samplerate_data
 
 
+# change this for linux or windows
 def plot_simple_data(data, smooth_data,  samplerate, name, alpha, save_path = ''):
 
-    if not save_path:
-        Path(save_path).mkdir(parents=True, exist_ok=True)
+    if not path.exists(save_path):
+        Path(save_path).mkdir(parents=True, exist_ok=False)
 
     # test plotting
     length = data.shape[0] / samplerate
     time = np.linspace(0., length, data.shape[0])
 
     # plot start of segment
-    if not os.path.isfile(f"{save_path}\\{name}_smooth_{str(alpha)}.png"):
+    if not os.path.isfile(f"{save_path}{name}_smooth_{str(alpha)}.png"):
         fig, axs = plt.subplots(2)
         axs[0].plot(time, data)
         plt.xlabel("Time in seconds")
@@ -185,7 +187,7 @@ def plot_simple_data(data, smooth_data,  samplerate, name, alpha, save_path = ''
         plt.xlabel("Time in seconds")
         plt.ylabel('Amplitude')
         if save_path:
-            plt.savefig(f"{save_path}\\{name}_smooth_{str(alpha)}.png")
+            plt.savefig(f"{save_path}{name}_smooth_{str(alpha)}.png")
         plt.show()
         plt.close('all')
 

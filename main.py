@@ -66,12 +66,13 @@ def main(alpha=0.95):
             data_lat_smooth = np.load(paths['lateral_data_smooth'] + "smoothed.npy", allow_pickle=True)
 
         else:
-            data_pat_smooth = preprocess.smooth_data(data_patella, alpha, sr_pat, name_list_patella,
-                                                              savepath=paths['patella_data_smooth'])
+
             data_med_smooth = preprocess.smooth_data(data_patella, alpha, sr_pat, name_list_patella,
-                                                              savepath=paths['patella_data_smooth'])
+                                                              savepath=paths['medial_data_smooth'])
             data_lat_smooth = preprocess.smooth_data(data_patella, alpha, sr_pat, name_list_patella,
-                                                              savepath=paths['patella_data_smooth'])
+                                                              savepath=paths['lateral_data_smooth'])
+            data_pat_smooth = preprocess.smooth_data(data_patella, alpha, sr_pat, name_list_patella,
+                                                     savepath=paths['patella_data_smooth'])
 
     # todo
     # split data
@@ -85,13 +86,11 @@ def main(alpha=0.95):
 
     #feature extraction
     #todo
-    # calculate, spectrogram, chroma, mfccs, simple sftf
+    # calculate, chroma, mfccs, simple sftf
 
     D = librosa.stft(data_pat_smooth[0])
     S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
     mfccs= librosa.feature.mfcc(y=data_pat_smooth[0], sr=sr_pat[0], n_mfcc=40)  # play around with amount of features
-
-
 
 
     # plot normal data
@@ -126,11 +125,6 @@ def main(alpha=0.95):
     plt.ylabel('Frequency [Hz]')
     plt.xlabel('Time [sec]')
     plt.show()
-
-    # mel_spec
-    spec = librosa.feature.melspectrogram(y=data_pat_smooth[0], sr=sr_pat[0], S=None, n_fft=2048,
-                                          hop_length=50, win_length=None, window='hann', center=True, pad_mode='constant',
-                                          power=2.0)
 
 if __name__ == '__main__':
     main()
