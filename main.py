@@ -38,7 +38,8 @@ def prepare_data():
         sortdata(paths['savePath'])
 
 
-def main(alpha=0.95):
+if __name__ == 'main':
+    alpha=0.95
     # read in labels and data
     retropatellar, lateral, medial, innenmeniskus, aussenmeniskus, session = \
         read_save_labels(paths['labelPath'])
@@ -126,8 +127,6 @@ def main(alpha=0.95):
     plt.xlabel('Time [sec]')
     plt.show()
 
-if __name__ == '__main__':
-    main()
 
 ######################### graveyard
 
