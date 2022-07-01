@@ -362,7 +362,11 @@ if __name__ == '__main__':
             input_xmllist.append(os.path.join(os.path.normcase(dirname), filename))
     input_xmllist = numpy.unique(input_xmllist)
     print('\n'.join(input_xmllist))
+<<<<<<< Updated upstream
 
+=======
+    
+>>>>>>> Stashed changes
     try:
         # Import VAG file
         (fs, samples) = wavfile.read(input_vagfile)

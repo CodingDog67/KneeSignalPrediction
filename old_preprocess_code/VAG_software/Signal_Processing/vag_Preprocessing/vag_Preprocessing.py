@@ -42,7 +42,7 @@ if __name__ == '__main__':
         signalXmlFileDialogFilename = vag_ouss_get_signal_xml_filename(i)
         result = vag_ouss_signal_xml_has_segmentation(signalXmlFileDialogFilename, segmentationVersion="ONN")
         if result is False:
-            print "Segmentation not found: " + signalXmlFileDialogFilename
+            print ("Segmentation not found: " + signalXmlFileDialogFilename)
 
     # Divide each segment to extension and flexion
     vag_ouss_segment_flexion_extension_v1_process_files_list(filesListwithPath)

@@ -36,7 +36,7 @@ import segmentation
 def OnClick(event):
     global SEGINDEX
     global SEGLINES
-    global SEGLINESID
+    global SEGLINESIDwh
     global SEGSPANS
     # Left click to add the beginning and the end of the segments
     if event.button==1 and toolbar.mode=="" and event.xdata<=len(vagsamples):
@@ -360,7 +360,7 @@ if __name__ == '__main__':
         if filename.endswith(".xml") & filename.startswith(smatch):
             input_xmllist.append(os.path.join(os.path.normcase(dirname), filename))
     input_xmllist = numpy.unique(input_xmllist)
-    print '\n'.join(input_xmllist)
+    print('\n'.join(input_xmllist))
 
     try:
         # Import VAG file
